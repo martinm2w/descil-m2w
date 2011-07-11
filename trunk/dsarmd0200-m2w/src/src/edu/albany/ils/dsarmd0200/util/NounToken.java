@@ -29,6 +29,7 @@ public class NounToken {
 //this is a list of all subsequent mentions.  
 	ArrayList <String> subsequentMentions;
 	Wordnet wn;
+        ChineseWordnet cnwn;
 
 	public NounToken(String wrd, String tg, String spkr, int trnno, int idd, Wordnet w){
 		word = wrd;
@@ -39,6 +40,17 @@ public class NounToken {
 		reference = -1;
 		subsequentMentions = new ArrayList<String>();
 		wn = w; float_tag = "";
+	}
+        
+        public NounToken(String wrd, String tg, String spkr, int trnno, int idd, ChineseWordnet w){
+		word = wrd;
+		tag = tg;
+		speaker = spkr;
+		turnNo = trnno;
+		ID = idd;
+		reference = -1;
+		subsequentMentions = new ArrayList<String>();
+		cnwn = w; float_tag = "";
 	}
 
     public String getId() { return id; }
