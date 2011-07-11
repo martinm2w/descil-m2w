@@ -468,5 +468,10 @@ public class ChineseWordnet {
         return synset;
         
     }
+        
+        private boolean isCnSyn(String word1, String word2){
+            boolean isSyn = false;
+            return isSyn;
+        }
 //      =================================setters & getters=========================================
 }
