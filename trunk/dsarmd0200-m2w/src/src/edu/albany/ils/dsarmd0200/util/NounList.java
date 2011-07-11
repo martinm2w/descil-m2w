@@ -915,9 +915,12 @@ public class NounList {
 		}
 	}
         
-        
-        public void resolveCHN(NounToken param)
-	{
+        /**
+         * m2w: for chinese resolving
+         * @param param 
+         * @date 7/11/11 3:54 PM
+         */
+        public void resolveCHN(NounToken param){
 		boolean cont = true;
 		// get word itself
 		String word1 = param.getWord();
@@ -930,8 +933,7 @@ public class NounList {
 		ArrayList <String> synonyms = new ArrayList<String>();
 		//tag = "" + tag.charAt(0);
 		// if it is noun, find HiSynonyms
-		if (tag.charAt(0) == 'N')
-		{
+		if (tag.charAt(0) == 'N'){
 			tag = "noun";
                         try{
                             synonyms = cnwn.getChineseSynlist(word1);
@@ -943,33 +945,20 @@ public class NounList {
 			*/
 			int num = numberOfNouns();
 			// find all other repetition words, update boolean rep 
-			for (int i = 0; cont && i < num; i++)
-			{
+			for (int i = 0; cont && i < num; i++){
 				String word2 = nouns.get(i).getWord();
 				boolean rep = word1.equalsIgnoreCase(word2);
 				boolean syn = false;
-				if (!rep)
-				{
-					//find all other words are synonyms of the original word
-					syn = wrdnt.isASynonym(word1, word2, tag);
-					//syn = synonyms.contains(word1);
+				if (!rep){
+                                    syn = cnwn.isChineseSyn(word1, word2);
 				}
-				if (syn || rep)
-				{
+				if (syn || rep){
 					// get that word
 					NounToken nt = nouns.get(i);
 					//modified by Ting Liu for submentions
 					while (nt.getRefInt() != -1) {
 					    nt = nouns.get(nt.getRefInt());
 					}
-					// make a new reference to the original word, save the reference words's ID in
-					// subsequentMentions arraylist in NounToken.java
-					/*
-					if (word1.trim().equalsIgnoreCase("jerry")) {
-					    System.out.println("param.getID: " + param.getID() + " === param turnno: " + param.getTurnNo());
-					    System.out.println("nt.getID: " + nt.getID() + " === turnno: " + nt.getTurnNo());
-					}
-					*/
 					nt.makeNewRef(param.getID());//modified by Ting 10/04 it was ID before
 					// vice versa
 					param.setReference(nt.getID());
@@ -978,80 +967,80 @@ public class NounList {
 			}
 			// do pronoun resolution
 		} 
-		else 
-		{
-		    //System.out.println("it's a pronoun");
-			PronounResolution2 pr2 = new PronounResolution2(param,turn_no,commacts,links,nouns,utterances);
-			
-			//resolve pronouns here
-			//get arraylist of nountokens...implement comm.acts
-			//2nd parameter of pronounresolution should be an arraylist of
-			//nountokens
-			// get turn no's lower bound
-			//int lowbound = Integer.parseInt(turn_no.get(0));
-			// get turn no's upper bound
-			//int upbound = Integer.parseInt(turn_no.get(turn_no.size() - 1));
-			// get this turn no of this word
-			//int uttNum = param.getTurnNo();
-			//String comm_act = "";
-			//if ((uttNum >= lowbound) && (uttNum <= upbound))
-				//comm_act = commacts.get(uttNum - 1);
-			// resolute pronoun, find "continuation" and "respose to"
-			//PronounResolution pr;
-			//if (comm_act.equalsIgnoreCase("continuation-of") ||
-					//comm_act.equalsIgnoreCase("response-to"))
-			//{
-				//System.out.println(links.get(uttNum - 1));
-				// get the link number
-				//int lnk = getLink(links.get(uttNum - 1));
-				// 1st param: link number
-				// 2nd param: this word's ID
-				//ArrayList<NounToken> temp = arrangeNouns(lnk, param.getID());
-				// temp: an arraylist of nouns before the nountoken of the same turn number and nountokens in the "link-to line"
-				//if (temp.size() > 0)
-					//temporarily checking if nouns is better than temp
-					//pr = new PronounResolution(word1, temp);
-				//else
-					//pr = new PronounResolution(word1, nouns);
-			//} 
-			//else 
-			//{
-				//pr = new PronounResolution(word1, nouns);
-			//}
-			pronounTargets.put(param.getID(), pr2);
-			NounToken tempToken = null;
-			int tempID = pr2.getTargetID();
-			if(tempID!=-1)
-			{
-				tempToken = this.getTokenWithID(tempID);
-			}
-			while (tempToken != null && tempToken.getReferenceNumber() != -1) {
-			    tempToken = nouns.get(tempToken.getReferenceNumber());
-			}
-			//modified by Ting
-			if (tempToken != null) {
-			    param.setReference(tempToken.getID());
-			    tempToken.makeNewRef(param.getID());//modified by Ting 10/04 it was ID before param.getID());
-			}
-			/*
-			    
-			//check if it still has reference
-			if(tempToken!=null && tempToken.getReferenceNumber()!=-1)
-			{
-				param.setReference(tempToken.getReferenceNumber());
-			}
-			else
-			{
-				param.setReference(pr2.getTargetID());
-			}
-			//System.out.println(pr.getTargetID());
-			if(pr2.getTargetID()!=-1)
-			{
-				NounToken nt = nouns.get(pr2.getTargetID());
-				nt.makeNewRef(param.getID());
-			}
-			*/
-		}
+//		else 
+//		{
+//		    //System.out.println("it's a pronoun");
+//			PronounResolution2 pr2 = new PronounResolution2(param,turn_no,commacts,links,nouns,utterances);
+//			
+//			//resolve pronouns here
+//			//get arraylist of nountokens...implement comm.acts
+//			//2nd parameter of pronounresolution should be an arraylist of
+//			//nountokens
+//			// get turn no's lower bound
+//			//int lowbound = Integer.parseInt(turn_no.get(0));
+//			// get turn no's upper bound
+//			//int upbound = Integer.parseInt(turn_no.get(turn_no.size() - 1));
+//			// get this turn no of this word
+//			//int uttNum = param.getTurnNo();
+//			//String comm_act = "";
+//			//if ((uttNum >= lowbound) && (uttNum <= upbound))
+//				//comm_act = commacts.get(uttNum - 1);
+//			// resolute pronoun, find "continuation" and "respose to"
+//			//PronounResolution pr;
+//			//if (comm_act.equalsIgnoreCase("continuation-of") ||
+//					//comm_act.equalsIgnoreCase("response-to"))
+//			//{
+//				//System.out.println(links.get(uttNum - 1));
+//				// get the link number
+//				//int lnk = getLink(links.get(uttNum - 1));
+//				// 1st param: link number
+//				// 2nd param: this word's ID
+//				//ArrayList<NounToken> temp = arrangeNouns(lnk, param.getID());
+//				// temp: an arraylist of nouns before the nountoken of the same turn number and nountokens in the "link-to line"
+//				//if (temp.size() > 0)
+//					//temporarily checking if nouns is better than temp
+//					//pr = new PronounResolution(word1, temp);
+//				//else
+//					//pr = new PronounResolution(word1, nouns);
+//			//} 
+//			//else 
+//			//{
+//				//pr = new PronounResolution(word1, nouns);
+//			//}
+//			pronounTargets.put(param.getID(), pr2);
+//			NounToken tempToken = null;
+//			int tempID = pr2.getTargetID();
+//			if(tempID!=-1)
+//			{
+//				tempToken = this.getTokenWithID(tempID);
+//			}
+//			while (tempToken != null && tempToken.getReferenceNumber() != -1) {
+//			    tempToken = nouns.get(tempToken.getReferenceNumber());
+//			}
+//			//modified by Ting
+//			if (tempToken != null) {
+//			    param.setReference(tempToken.getID());
+//			    tempToken.makeNewRef(param.getID());//modified by Ting 10/04 it was ID before param.getID());
+//			}
+//			/*
+//			    
+//			//check if it still has reference
+//			if(tempToken!=null && tempToken.getReferenceNumber()!=-1)
+//			{
+//				param.setReference(tempToken.getReferenceNumber());
+//			}
+//			else
+//			{
+//				param.setReference(pr2.getTargetID());
+//			}
+//			//System.out.println(pr.getTargetID());
+//			if(pr2.getTargetID()!=-1)
+//			{
+//				NounToken nt = nouns.get(pr2.getTargetID());
+//				nt.makeNewRef(param.getID());
+//			}
+//			*/
+//		}
 	}
         
         
