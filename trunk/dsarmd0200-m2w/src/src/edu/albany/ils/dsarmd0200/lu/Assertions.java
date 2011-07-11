@@ -1595,6 +1595,16 @@ public class Assertions {
 	    FindVerb fv = new FindVerb();
 	    //nls_ = new NounList(utts, spks, wn_, comm_acts, resps_to, turn_nums, phr_ch, xp);
 	    nls_ = new NounList(xp, wn_, phr_ch, utts_);
+            if(isEnglish_){
+		    nls_.setEnglish(true);                
+            }
+            if(isUrdu_){
+                nls_.setUrdu (true);
+                nls_.setUrduPath (Settings.getValue (Settings.URDU_PATH));
+            }
+            if(isChinese_){
+                nls_.setChinese (true);
+            }
 //	    if ((Settings.getValue (Settings.LANGUAGE)).equals("english") )
 //		{
 //		    isEnglish_ = true;
@@ -1855,20 +1865,20 @@ public class Assertions {
         if ((Settings.getValue (Settings.LANGUAGE)).equals("english") )
 		{
 		    isEnglish_ = true;
-		    nls_.setEnglish(true);
+//		    nls_.setEnglish(true);
                     StanfordPOSTagger.initialize();
 		}
 	    if ((Settings.getValue (Settings.LANGUAGE)).equals("urdu") )
 		{
 		    isUrdu_ = true;
-		    nls_.setUrdu (true);
-		    nls_.setUrduPath (Settings.getValue (Settings.URDU_PATH));
+//		    nls_.setUrdu (true);
+//		    nls_.setUrduPath (Settings.getValue (Settings.URDU_PATH));
 		}
             //m2w: chinese 5/17/11 1:39 PM
             if ((Settings.getValue (Settings.LANGUAGE)).equals("chinese") )
 		{
 		    isChinese_ = true;
-		    nls_.setChinese (true);
+//		    nls_.setChinese (true);
                     StanfordPOSTagger.initializeChinese();
 		}
     }
