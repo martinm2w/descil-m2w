@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.io.*;
 import edu.albany.ils.dsarmd0200.evaltag.*;
+import java.sql.SQLException;
 /**
  *
  * Author: Ken Stahl
@@ -932,7 +933,9 @@ public class NounList {
 		if (tag.charAt(0) == 'N')
 		{
 			tag = "noun";
-			synonyms = wrdnt.getHiSynonym(word1, tag);
+                        try{
+                            synonyms = cnwn.getChineseSynlist(word1);
+                        }catch(SQLException e){e.printStackTrace();}
 			//System.out.println("The word: " + word1);
 			/*
 			for (int i = 0; i < synonyms.size(); i++)
