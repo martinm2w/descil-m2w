@@ -1,0 +1,104 @@
+<!-- DeER Build Script Version 1  -->
+
+<project name="DSARMD" default="dist" basedir=".">
+    <description>
+        build file for DeER code
+    </description>
+
+  <!-- set global properties for this build -->
+  <property name="src"           location="."/><!--".:/home/ting/develop/NLSRC/edu/stanford"-->
+  <!-- property name="src"           location="/home/ting/develop/NLSRC/edu/stanford"/-->
+  <property name="build"         location="build"/>
+  <property name="dist"          location="dist"/>
+  <property name="client-jar"    value="/home/ting/develop/NLTEST/scil0200/lib/assertion_maker.jar"/>
+  <property name="lib"    value="/home/ting/develop/NLLIB"/>
+
+  <!-- The main compile target for this build -->
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source">
+       <classpath>
+
+         <!-- XML Parser API -->
+         <pathelement location="/projects/SHARED/xml_parser/resolver.jar" />
+         <pathelement location="/projects/SHARED/xml_parser/serializer.jar" />
+         <pathelement location="/projects/SHARED/xml_parser/xercesImpl.jar" />
+         <pathelement location="/projects/SHARED/xml_parser/xercesSample.jar" />
+         <pathelement location="/projects/SHARED/xml_parser/xml-apis.jar" />
+         <pathelement location="/projects/SHARED/xml_parser/xml-apis.jar" />
+         <!-- Wordnet API-->
+         <pathelement location="/projects/SHARED/jwnl1.3/jwnl.jar" />
+         <pathelement location="/projects/SHARED/jwnl1.3/commons-logging.jar" />
+         <!-- Math API-->
+         <pathelement location="/projects/SHARED/commons-math-2.0/commons-math-2.0.jar" />
+         <!-- report API -->
+         <pathelement location="/projects/SHARED/report_lib/jsr173_1.0_api.jar" />
+         <pathelement location="/projects/SHARED/report_lib/ptsReport.jar" />
+         <pathelement location="/projects/SHARED/report_lib/resolver.jar" />
+         <pathelement location="/projects/SHARED/report_lib/xbean.jar" />
+         <pathelement location="/projects/SHARED/report_lib/xbean_xpath.jar" />
+         <pathelement location="/projects/SHARED/report_lib/xmlbeans-qname.jar" />
+         <pathelement location="/projects/SHARED/report_lib/xmlpublic.jar" />
+
+         <!-- English pos tag -->
+         <pathelement location="/projects/SHARED/stanford-pos/stanford-postagger.jar" />
+
+         <!-- English parser -->
+         <pathelement location="/projects/SHARED/stanford-parser/stanford-parser.jar" />
+
+       </classpath>
+    </javac>
+  </target>
+
+  <!-- The very first target that must be successful in order to build hitiqa -->
+  <target name="init">
+    <!-- Create the time stamp. Used to name the jar file -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <!-- Once the code is compiled, we can distribute it -->
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    
+    <mkdir dir="${dist}/lib"/>
+    <mkdir dir="jar_files/edu/albany/ils/dsarmd0200/cuetag"/>
+    <mkdir dir="jar_files/edu/albany/ils/dsarmd0200/evaltag"/>
+    <mkdir dir="jar_files/edu/albany/ils/dsarmd0200/lu"/>
+    <mkdir dir="jar_files/edu/albany/ils/dsarmd0200/util"/>
+    <!--mkdir dir="jar_files/edu/stanford"/-->
+    <!-- Copy the classes needed to run the hitiqa to the collane client lib directory -->
+    <copy todir="jar_files/edu/albany/ils/dsarmd0200/cuetag">
+       <fileset dir="${build}/edu/albany/ils/dsarmd0200/cuetag"/> 
+    </copy>
+
+    <!--copy todir="jar_files/edu/stanford">
+       <fileset dir="${build}/edu/stanford"/> 
+    </copy-->
+
+    <copy todir="jar_files/edu/albany/ils/dsarmd0200/evaltag">
+       <fileset dir="${build}/edu/albany/ils/dsarmd0200/evaltag"/> 
+    </copy>
+
+    <copy todir="jar_files/edu/albany/ils/dsarmd0200/lu">
+       <fileset dir="${build}/edu/albany/ils/dsarmd0200/lu"/> 
+    </copy>
+
+    <copy todir="jar_files/edu/albany/ils/dsarmd0200/util">
+       <fileset dir="${build}/edu/albany/ils/dsarmd0200/util"/> 
+    </copy>
+
+      <jar destfile="${client-jar}" basedir="jar_files"/> 
+
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}/edu"/>
+    <delete dir="${dist}"/>
+    <delete dir="${client-jar}"/>
+    <delete dir="jar_files"/>
+  </target>
+
+</project>
