@@ -21,11 +21,15 @@ import java.util.regex.Pattern;
  */
 public class ChineseWordnet {
 //	====================================Attributes=============================================
-    public static ChineseWordnetJDBC cjdbc;
+    public ChineseWordnetJDBC cjdbc;
+    public Connection conn;
 //      ===================================init & const============================================
     public ChineseWordnet(String dbms, String serverName, String portNumber, String dbName){
         super();
         cjdbc = new ChineseWordnetJDBC(dbms, serverName, portNumber, dbName);
+//        try{
+//            conn = cjdbc.getConnection(dbName, dbms);
+//        }catch(SQLException e){e.printStackTrace();}
     }
     
 //	====================================public method============================================
@@ -81,6 +85,7 @@ public class ChineseWordnet {
         synset = this.getChSynset(word, conn);//synset not parsed
         conn.close();
         synset = this.parseSynset(synset);
+        System.out.println(synset);
         return synset;
     }
     
@@ -117,6 +122,12 @@ public class ChineseWordnet {
         }
         return isSyn;
     }
+    
+    public void closeConn(){
+        try{
+            conn.close();
+        }catch(SQLException e){e.printStackTrace();}
+    }
 //	===================================private methods============================================
     
     /**
@@ -149,7 +160,7 @@ public class ChineseWordnet {
           list1.add(tempList);
 //          System.out.println(synset_id + "\t" + "- " + w_num + "-\t" + chinese);
          }
-        System.out.println("list 1 is: " + list1);//ends step 1 
+//        System.out.println("list 1 is: " + list1);//ends step 1 
         
         
         //2 . looking for the english number for the chinese words
@@ -169,7 +180,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 2 is: " + list2);//ends step 2 for loop
+//        System.out.println("list 2 is: " + list2);//ends step 2 for loop
 
         //3. get the synset from wn_synset
         ArrayList<ArrayList<String>> list3 = new ArrayList<ArrayList<String>>();
@@ -193,7 +204,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 3 is: " + list3);
+//        System.out.println("list 3 is: " + list3);
         //adding synsets from list3 to synset
         for(ArrayList<String> tempList : list3){
             synset.add(tempList.get(7));
@@ -264,7 +275,7 @@ public class ChineseWordnet {
           list1.add(tempList);
 //          System.out.println(synset_id + "\t" + "- " + w_num + "-\t" + chinese);
          }
-        System.out.println("list 1 is: " + list1);//ends step 1 
+//        System.out.println("list 1 is: " + list1);//ends step 1 
         
         
         //2 . looking for the english number for the chinese words
@@ -284,7 +295,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 2 is: " + list2);//ends step 2 for loop
+//        System.out.println("list 2 is: " + list2);//ends step 2 for loop
 
         //3. get hyper from hypers
         ArrayList<ArrayList<String>> list3 = new ArrayList<ArrayList<String>>();
@@ -302,7 +313,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 3 is: " + list3);
+//        System.out.println("list 3 is: " + list3);
         
         //4.convert english ids to chinese ones using wn_map
         ArrayList<ArrayList<String>> list4 = new ArrayList<ArrayList<String>>();
@@ -322,7 +333,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 4 is: " + list4);
+//        System.out.println("list 4 is: " + list4);
         
         
         //5.convert english word to chinese and build the set
@@ -342,7 +353,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 5 is: " + list5);
+//        System.out.println("list 5 is: " + list5);
         
         
         
@@ -383,7 +394,7 @@ public class ChineseWordnet {
           list1.add(tempList);
 //          System.out.println(synset_id + "\t" + "- " + w_num + "-\t" + chinese);
          }
-        System.out.println("list 1 is: " + list1);//ends step 1 
+//        System.out.println("list 1 is: " + list1);//ends step 1 
         
         
         //2 . looking for the english number for the chinese words
@@ -403,7 +414,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 2 is: " + list2);//ends step 2 for loop
+//        System.out.println("list 2 is: " + list2);//ends step 2 for loop
 
         //3. get hyper from hypers
         ArrayList<ArrayList<String>> list3 = new ArrayList<ArrayList<String>>();
@@ -421,7 +432,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 3 is: " + list3);
+//        System.out.println("list 3 is: " + list3);
         
         //4.convert english ids to chinese ones using wn_map
         ArrayList<ArrayList<String>> list4 = new ArrayList<ArrayList<String>>();
@@ -441,7 +452,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 4 is: " + list4);
+//        System.out.println("list 4 is: " + list4);
         
         
         //5.convert english word to chinese and build the set
@@ -461,7 +472,7 @@ public class ChineseWordnet {
 //              System.out.println(s1 + "\t" + "- " + s2 + "-\t" + s3 + "\t" + s4);
             }
         }
-        System.out.println("list 5 is: " + list5);
+//        System.out.println("list 5 is: " + list5);
         
         
         
