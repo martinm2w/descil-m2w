@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -103,6 +104,18 @@ public class ChineseWordnet {
         hyperList = this.getCNHyper(word, conn);
         conn.close();
         return hyperList;
+    }
+    
+    public boolean isChineseSyn(String word1, String word2){
+        boolean isSyn = false;
+        if(this.isCnSyn(word1, word2)){
+            isSyn = true;
+        }else if(this.isCnSyn(word2, word1)){
+            isSyn = true;
+        }else{
+            isSyn = false;
+        }
+        return isSyn;
     }
 //	===================================private methods============================================
     
@@ -471,6 +484,13 @@ public class ChineseWordnet {
         
         private boolean isCnSyn(String word1, String word2){
             boolean isSyn = false;
+            List synList = new ArrayList<String>();
+            try{
+                synList = this.getChineseSynlist(word1);
+            }catch(SQLException e){e.printStackTrace();}
+            if(!synList.isEmpty() && synList.contains(word2)){
+                isSyn = true;
+            }
             return isSyn;
         }
 //      =================================setters & getters=========================================
