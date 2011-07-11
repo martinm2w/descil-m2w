@@ -48,7 +48,7 @@ public class NounList {
         //m2w: chinese. 5/17/11 12:23 PM
         private boolean isChinese_ = false;
         private boolean isEnglish_ = false;
-        private ChineseWordnet CNWN = new ChineseWordnet("mysql", "localhost", "3306", "atur");
+        private ChineseWordnet cnwn = new ChineseWordnet("mysql", "localhost", "3306", "atur");
         
 	//NOTE: createlist is the automated list.  It tags and creates noun phrases
 	//makeAnnotatedList is the annotated list.  It parses annotated tags and creates
@@ -608,12 +608,12 @@ public class NounList {
 						// 4th param: turn no
 						// 5th param: wordnet object
 						NounToken nt =
-								new NounToken(word, tag, speaker, turnno, ID, wrdnt);
+								new NounToken(word, tag, speaker, turnno, ID, cnwn);
 //								new NounToken(word, tag, speaker, i + 1, ID, wrdnt);
 //						if ((!ParseTools.isBadNoun(word)) && ParseTools.isWord(word)){
 						if (!ParseTools.isBadNoun(word)) { //modified by 06/20/2011 TL
 							// resolve noun token
-							resolve(nt);
+							resolveCHN(nt);
 							if (nt.firstMention()){
 								String ft = Integer.toString(i+1) + ".";
 								ft += Integer.toString((++count));
@@ -623,10 +623,10 @@ public class NounList {
 						}
 					} else if (ParseTools.isPronoun(tag) && !ParseTools.ignorePronoun(word)){
 					    //System.out.println("find a pronoun: " + word);
-						NounToken nt = new NounToken(word, tag, speaker, i + 1, ID, wrdnt);
+						NounToken nt = new NounToken(word, tag, speaker, i + 1, ID, cnwn);
 						if (!ParseTools.ignorePronoun(word) &&
 						    !ParseTools.isBadNoun(word)) { //add bracket 06/17 by TL, add isBadNoun
-						    resolve(nt);
+						    resolveCHN(nt);
 						    //System.out.println("after resolve: " + nt);
 						    nouns.add(nt);
 						}
