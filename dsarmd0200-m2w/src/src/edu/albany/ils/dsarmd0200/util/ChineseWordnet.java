@@ -22,13 +22,13 @@ import java.util.regex.Pattern;
 public class ChineseWordnet {
 //	====================================Attributes=============================================
     public ChineseWordnetJDBC cjdbc;
-    public Connection conn;
+    public static Connection conn;
 //      ===================================init & const============================================
     public ChineseWordnet(String dbms, String serverName, String portNumber, String dbName){
         super();
         cjdbc = new ChineseWordnetJDBC(dbms, serverName, portNumber, dbName);
 //        try{
-//            conn = cjdbc.getConnection(dbName, dbms);
+//            conn = cjdbc.getConnection("root", "root");
 //        }catch(SQLException e){e.printStackTrace();}
     }
     
@@ -39,9 +39,10 @@ public class ChineseWordnet {
         ChineseWordnet CNWN = new ChineseWordnet("mysql", "localhost", "3306", "atur");
 //        CNWN.initialize("mysql", "localhost", "3306", "atur");
         try{
-//            resultSet = CNWN.getChineseSynlist("嘲笑");
+            resultSet = CNWN.getChineseSynlist("嘲笑");
 //            resultSet = CNWN.getChineseHyperlist("嘲笑");
-            resultSet = CNWN.getChineseHypolist("嘲笑");
+//            resultSet = CNWN.getChineseHypolist("嘲笑");
+            ChineseWordnet.closeConn();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -50,6 +51,9 @@ public class ChineseWordnet {
             System.out.print("[" + a + "]");
     }
     
+    public static void closeConn() throws SQLException{
+        conn.close();
+    }
 //    public static void main(String[] agrs){
 //        ChineseWordnetJDBC cjdbc = new ChineseWordnetJDBC("mysql", "localhost", "3306", "atur");
 //        
@@ -85,7 +89,7 @@ public class ChineseWordnet {
         synset = this.getChSynset(word, conn);//synset not parsed
         conn.close();
         synset = this.parseSynset(synset);
-        System.out.println(synset);
+//        System.out.println(synset);
         return synset;
     }
     
@@ -115,19 +119,20 @@ public class ChineseWordnet {
         boolean isSyn = false;
         if(this.isCnSyn(word1, word2)){
             isSyn = true;
-        }else if(this.isCnSyn(word2, word1)){
-            isSyn = true;
-        }else{
-            isSyn = false;
         }
+//        else if(this.isCnSyn(word2, word1)){
+//            isSyn = true;
+//        }else{
+//            isSyn = false;
+//        }
         return isSyn;
     }
     
-    public void closeConn(){
-        try{
-            conn.close();
-        }catch(SQLException e){e.printStackTrace();}
-    }
+//    public void closeConn(){
+//        try{
+//            conn.close();
+//        }catch(SQLException e){e.printStackTrace();}
+//    }
 //	===================================private methods============================================
     
     /**

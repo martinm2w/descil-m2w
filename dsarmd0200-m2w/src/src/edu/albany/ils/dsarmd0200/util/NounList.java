@@ -609,7 +609,7 @@ public class NounList {
 						// 4th param: turn no
 						// 5th param: wordnet object
 						NounToken nt =
-								new NounToken(word, tag, speaker, turnno, ID, cnwn);
+								new NounToken(word, tag, speaker, turnno, ID, getCnwn());
 //								new NounToken(word, tag, speaker, i + 1, ID, wrdnt);
 //						if ((!ParseTools.isBadNoun(word)) && ParseTools.isWord(word)){
 						if (!ParseTools.isBadNoun(word)) { //modified by 06/20/2011 TL
@@ -624,7 +624,7 @@ public class NounList {
 						}
 					} else if (ParseTools.isPronoun(tag) && !ParseTools.ignorePronoun(word)){
 					    //System.out.println("find a pronoun: " + word);
-						NounToken nt = new NounToken(word, tag, speaker, i + 1, ID, cnwn);
+						NounToken nt = new NounToken(word, tag, speaker, i + 1, ID, getCnwn());
 						if (!ParseTools.ignorePronoun(word) &&
 						    !ParseTools.isBadNoun(word)) { //add bracket 06/17 by TL, add isBadNoun
 						    resolveCHN(nt);
@@ -936,7 +936,7 @@ public class NounList {
 		if (tag.charAt(0) == 'N'){
 			tag = "noun";
                         try{
-                            synonyms = cnwn.getChineseSynlist(word1);
+                            synonyms = getCnwn().getChineseSynlist(word1);
                         }catch(SQLException e){e.printStackTrace();}
 			//System.out.println("The word: " + word1);
 			/*
@@ -950,7 +950,7 @@ public class NounList {
 				boolean rep = word1.equalsIgnoreCase(word2);
 				boolean syn = false;
 				if (!rep){
-                                    syn = cnwn.isChineseSyn(word1, word2);
+                                    syn = getCnwn().isChineseSyn(word1, word2);
 				}
 				if (syn || rep){
 					// get that word
@@ -1230,5 +1230,19 @@ public class NounList {
             }
         }
         //System.out.println("after sort\n: " + nouns);
+    }
+
+    /**
+     * @return the cnwn
+     */
+    public ChineseWordnet getCnwn() {
+        return cnwn;
+    }
+
+    /**
+     * @param cnwn the cnwn to set
+     */
+    public void setCnwn(ChineseWordnet cnwn) {
+        this.cnwn = cnwn;
     }
 }
