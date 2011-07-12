@@ -14,6 +14,7 @@ import edu.albany.ils.dsarmd0200.util.xml.*;
 //import edu.albany.ils.dsarmd0200.ml.*;
 import edu.albany.ils.dsarmd0200.cuetag.*;
 import edu.albany.ils.dsarmd0200.evaltag.*;
+import java.sql.SQLException;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -31,7 +32,9 @@ public class Assertions {
 
 	loadAndParseTraining ();
 	loadAndParse ();
+        //m2w: for chinese
         this.setLanguageAndInitPosTaggers();
+//        this.initChineseWordnet();
 	/*
 	if (Settings.getValue(Settings.PROCESS_TYPE).equals("automated")) {
 	    preprocess();
@@ -162,6 +165,11 @@ public class Assertions {
 	    //calTpDis(i);
 	    //createReport();
 	    //printReport();
+//            try{
+//                if(!ChineseWordnet.conn.isClosed()){
+//                        ChineseWordnet.closeConn();
+//                }
+//            }catch(SQLException e){e.printStackTrace();}
 	}
 
 
@@ -1604,6 +1612,7 @@ public class Assertions {
             }
             if(isChinese_){
                 nls_.setChinese (true);
+//                nls_.setCnwn(CNWN);
             }
 //	    if ((Settings.getValue (Settings.LANGUAGE)).equals("english") )
 //		{
@@ -1883,6 +1892,9 @@ public class Assertions {
 		}
     }
     
+//    private void initChineseWordnet(){
+//        CNWN = new ChineseWordnet("mysql", "localhost", "3306", "atur");
+//    }
     
     public void printReport() {
 	prxmlp_.showSystemReport();
@@ -1934,6 +1946,7 @@ public class Assertions {
     private boolean isEnglish_ = false;
     private boolean isChinese_ = false;
     private boolean isUrdu_ = false;
+//    private ChineseWordnet CNWN = null;
 
 
     private class QueryListener extends Thread
