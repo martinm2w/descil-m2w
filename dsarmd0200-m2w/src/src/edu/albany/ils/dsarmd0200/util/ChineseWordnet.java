@@ -6,11 +6,7 @@ package edu.albany.ils.dsarmd0200.util;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +18,9 @@ import java.util.regex.Pattern;
 public class ChineseWordnet {
 //	====================================Attributes=============================================
     public ChineseWordnetJDBC cjdbc;
-    public static Connection conn;
+//    public static Connection conn;
+    //improving: 
+    public static HashMap wordMap;
 //      ===================================init & const============================================
     public ChineseWordnet(String dbms, String serverName, String portNumber, String dbName){
         super();
@@ -42,7 +40,7 @@ public class ChineseWordnet {
             resultSet = CNWN.getChineseSynlist("嘲笑");
 //            resultSet = CNWN.getChineseHyperlist("嘲笑");
 //            resultSet = CNWN.getChineseHypolist("嘲笑");
-            ChineseWordnet.closeConn();
+//            ChineseWordnet.closeConn();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -51,9 +49,9 @@ public class ChineseWordnet {
             System.out.print("[" + a + "]");
     }
     
-    public static void closeConn() throws SQLException{
-        conn.close();
-    }
+//    public static void closeConn() throws SQLException{
+////        conn.close();
+//    }
 //    public static void main(String[] agrs){
 //        ChineseWordnetJDBC cjdbc = new ChineseWordnetJDBC("mysql", "localhost", "3306", "atur");
 //        
@@ -107,7 +105,7 @@ public class ChineseWordnet {
         return hyperList;
     }
     
-    public ArrayList<String> getChineseHypolist(String word) throws SQLException{
+    public ArrayList<String> getChineseHypolist(String word) throws SQLException{ 
         ArrayList<String> hyperList = new ArrayList<String>();
         Connection conn = cjdbc.getConnection("root", "root");
         hyperList = this.getCNHyper(word, conn);
