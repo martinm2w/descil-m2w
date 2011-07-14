@@ -933,9 +933,10 @@ public class NounList {
 		ArrayList <String> synonyms = new ArrayList<String>();
 		//tag = "" + tag.charAt(0);
 		// if it is noun, find HiSynonyms
-		if (tag.charAt(0) == 'N'){
+		if (tag.charAt(0) == 'N' && !word1.contains("%")){//m2w : added word1 not equals % cuz it stuck at runtime.
 			tag = "noun";
                         try{
+                            System.out.println("word: >" + word1 + "<");
                             synonyms = getCnwn().getChineseSynlist(word1);
                         }catch(SQLException e){e.printStackTrace();}
 			//System.out.println("The word: " + word1);
@@ -951,6 +952,7 @@ public class NounList {
 				boolean syn = false;
 				if (!rep){
                                     syn = getCnwn().isChineseSyn(word1, word2);
+//                                    syn = synonyms.contains(word2);
 				}
 				if (syn || rep){
 					// get that word
@@ -967,6 +969,8 @@ public class NounList {
 			}
 			// do pronoun resolution
 		} 
+                
+                
 //		else 
 //		{
 //		    //System.out.println("it's a pronoun");
