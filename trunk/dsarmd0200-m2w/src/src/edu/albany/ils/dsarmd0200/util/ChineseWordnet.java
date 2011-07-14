@@ -20,11 +20,16 @@ public class ChineseWordnet {
     public ChineseWordnetJDBC cjdbc;
 //    public static Connection conn;
     //improving: 
-    public static HashMap wordMap;
+    public static HashMap<String, ArrayList<String>> synMap, hyperMap, hypoMap;
+    public static int testSyn = 0;
+    public static int testSynjdbc = 0;
 //      ===================================init & const============================================
     public ChineseWordnet(String dbms, String serverName, String portNumber, String dbName){
         super();
         cjdbc = new ChineseWordnetJDBC(dbms, serverName, portNumber, dbName);
+        synMap = new HashMap<String, ArrayList<String>>();
+        hyperMap = new HashMap<String, ArrayList<String>>();
+        hypoMap = new HashMap<String, ArrayList<String>>();
 //        try{
 //            conn = cjdbc.getConnection("root", "root");
 //        }catch(SQLException e){e.printStackTrace();}
@@ -77,17 +82,28 @@ public class ChineseWordnet {
     
     /**
      * m2w: the public interface, returns an arraylist of strings of all synons.
-     * @param word
-     * @return
+     * added the improvemnt which is the implementation of the hashmaps .7/14/11 10:37 AM
+     * @param word: the word we want to search.
+     * @return this word's synlist.
      * @throws SQLException 
+     * @date 7/14/11 10:37 AM
      */
     public ArrayList<String> getChineseSynlist(String word) throws SQLException{
+        System.out.println("syn: " + ++testSyn);
         ArrayList<String> synset = new ArrayList<String>();
-        Connection conn = cjdbc.getConnection("root", "root");
-        synset = this.getChSynset(word, conn);//synset not parsed
-        conn.close();
-        synset = this.parseSynset(synset);
-//        System.out.println(synset);
+        if(!word.equals("")){
+            if(this.isTheWordInTheMap(word, synMap)){
+                return synMap.get(word);
+            }else{
+                Connection conn = cjdbc.getConnection("root", "root");
+                synset = this.getChSynset(word, conn);//synset not parsed
+                conn.close();
+                synset = this.parseSynset(synset);
+                System.out.println("synjdbc operation: " + ++testSynjdbc);
+            }
+            this.addToWordMap(word, synset, synMap);
+//            System.out.println(synset);
+        }
         return synset;
     }
     
@@ -99,18 +115,28 @@ public class ChineseWordnet {
      */
     public ArrayList<String> getChineseHyperlist(String word) throws SQLException{
         ArrayList<String> hyperList = new ArrayList<String>();
-        Connection conn = cjdbc.getConnection("root", "root");
-        hyperList = this.getCNHyper(word, conn);
-        conn.close();
+        if(this.isTheWordInTheMap(word, hyperMap)){
+            return hyperMap.get(word);
+        }else{
+            Connection conn = cjdbc.getConnection("root", "root");
+            hyperList = this.getCNHyper(word, conn);
+            conn.close();
+        }
+        this.addToWordMap(word, hyperList, hyperMap);
         return hyperList;
     }
     
     public ArrayList<String> getChineseHypolist(String word) throws SQLException{ 
-        ArrayList<String> hyperList = new ArrayList<String>();
-        Connection conn = cjdbc.getConnection("root", "root");
-        hyperList = this.getCNHyper(word, conn);
-        conn.close();
-        return hyperList;
+        ArrayList<String> hypoList = new ArrayList<String>();
+        if(this.isTheWordInTheMap(word, hypoMap)){
+            return hypoMap.get(word);
+        }else{
+            Connection conn = cjdbc.getConnection("root", "root");
+            hypoList = this.getCNHypo(word, conn);
+            conn.close();
+        }
+        this.addToWordMap(word, hypoList, hypoMap);
+        return hypoList;
     }
     
     public boolean isChineseSyn(String word1, String word2){
@@ -495,17 +521,57 @@ public class ChineseWordnet {
         return synset;
         
     }
-        
+        /**
+         * m2w: util method for isChineseSynonym
+         * @param word1
+         * @param word2
+         * @return 
+         */
         private boolean isCnSyn(String word1, String word2){
             boolean isSyn = false;
-            List synList = new ArrayList<String>();
-            try{
-                synList = this.getChineseSynlist(word1);
-            }catch(SQLException e){e.printStackTrace();}
-            if(!synList.isEmpty() && synList.contains(word2)){
-                isSyn = true;
+            List<String> synList = new ArrayList<String>();
+//            try{
+//                synList = this.getChineseSynlist(word1);
+            if(!synMap.isEmpty())
+                synList = synMap.get(word1);
+//            }catch(SQLException e){e.printStackTrace();}
+            if(!synList.isEmpty()){
+                for(String s : synList){
+                    if(s.contains(word2)){
+                        isSyn = true;
+                        System.out.println("match: " + word1 + "-" + word2);
+                    }
+                    
+                }
             }
             return isSyn;
+        }
+        
+        /**
+         * m2w: see if the word is already in the map
+         * @param word
+         * @return boolean value: inMap
+         * @date 7/14/11 10:06 AM
+         */
+        private boolean isTheWordInTheMap(String word, HashMap<String, ArrayList<String>> map){
+            boolean inMap = false;
+//            System.out.println("word: >" + word + "<");
+            if(word.equals("") && 
+                map.containsKey(word)){
+                inMap = true;
+            }
+            return inMap;
+        }
+        
+        /**
+         * m2w: util method for putting new word and synlist into the map, just for making the project look neat.
+         * @param word
+         * @param synlist 
+         */
+        private void addToWordMap(String word, ArrayList<String> list, HashMap<String, ArrayList<String>> map){
+            if(!map.containsKey(word)){
+                map.put(word, list);
+            }
         }
 //      =================================setters & getters=========================================
 }
