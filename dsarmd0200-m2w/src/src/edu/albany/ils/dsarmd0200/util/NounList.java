@@ -936,7 +936,7 @@ public class NounList {
 		if (tag.charAt(0) == 'N' && !word1.contains("%")){//m2w : added word1 not equals % cuz it stuck at runtime.
 			tag = "noun";
                         try{
-                            System.out.println("word: >" + word1 + "<");
+//                            System.out.println("word: >" + word1 + "<");
                             synonyms = getCnwn().getChineseSynlist(word1);
                         }catch(SQLException e){e.printStackTrace();}
 			//System.out.println("The word: " + word1);

@@ -89,7 +89,7 @@ public class ChineseWordnet {
      * @date 7/14/11 10:37 AM
      */
     public ArrayList<String> getChineseSynlist(String word) throws SQLException{
-        System.out.println("syn: " + ++testSyn);
+//        System.out.println("syn: " + ++testSyn);
         ArrayList<String> synset = new ArrayList<String>();
         if(!word.equals("")){
             if(this.isTheWordInTheMap(word, synMap)){
@@ -99,7 +99,7 @@ public class ChineseWordnet {
                 synset = this.getChSynset(word, conn);//synset not parsed
                 conn.close();
                 synset = this.parseSynset(synset);
-                System.out.println("synjdbc operation: " + ++testSynjdbc);
+//                System.out.println("synjdbc operation: " + ++testSynjdbc);
             }
             this.addToWordMap(word, synset, synMap);
 //            System.out.println(synset);
@@ -115,27 +115,31 @@ public class ChineseWordnet {
      */
     public ArrayList<String> getChineseHyperlist(String word) throws SQLException{
         ArrayList<String> hyperList = new ArrayList<String>();
-        if(this.isTheWordInTheMap(word, hyperMap)){
-            return hyperMap.get(word);
-        }else{
-            Connection conn = cjdbc.getConnection("root", "root");
-            hyperList = this.getCNHyper(word, conn);
-            conn.close();
+        if(!word.equals("")){
+            if(this.isTheWordInTheMap(word, hyperMap)){
+                return hyperMap.get(word);
+            }else{
+                Connection conn = cjdbc.getConnection("root", "root");
+                hyperList = this.getCNHyper(word, conn);
+                conn.close();
+            }
+            this.addToWordMap(word, hyperList, hyperMap);
         }
-        this.addToWordMap(word, hyperList, hyperMap);
         return hyperList;
     }
     
     public ArrayList<String> getChineseHypolist(String word) throws SQLException{ 
         ArrayList<String> hypoList = new ArrayList<String>();
-        if(this.isTheWordInTheMap(word, hypoMap)){
-            return hypoMap.get(word);
-        }else{
-            Connection conn = cjdbc.getConnection("root", "root");
-            hypoList = this.getCNHypo(word, conn);
-            conn.close();
+        if(!word.equals("")){
+            if(this.isTheWordInTheMap(word, hypoMap)){
+                return hypoMap.get(word);
+            }else{
+                Connection conn = cjdbc.getConnection("root", "root");
+                hypoList = this.getCNHypo(word, conn);
+                conn.close();
+            }
+            this.addToWordMap(word, hypoList, hypoMap);
         }
-        this.addToWordMap(word, hypoList, hypoMap);
         return hypoList;
     }
     
@@ -539,7 +543,7 @@ public class ChineseWordnet {
                 for(String s : synList){
                     if(s.contains(word2)){
                         isSyn = true;
-                        System.out.println("match: " + word1 + "-" + word2);
+//                        System.out.println("match: " + word1 + "-" + word2);
                     }
                     
                 }
